@@ -1,13 +1,13 @@
 {
     "name":"Bugtags-demo-deploy-cli",
     "version": "0.1.0",
-    "user": "Boelroy",
-    "password": "xbw2007326",
+    "user": "you-username",
+    "password": "you-password",
     "owner": "Boelroy",
     "repo": "deploy-cli",
     "releases": ["master"],
-    "qiniu_ak": "QpDy9S6Y7VpwGmMchysgqJlxRKDxpmgIAO-Vg5fa",
-    "qiniu_sk":"NA4Odn4TIqoprQxCiQYIg5ovrgOcXVGSvQCmlr80",
-    "qiniu_buckect": "instapic",
+    "qiniu_ak": "",
+    "qiniu_sk":"",
+    "qiniu_buckect": "you-buckect",
     "description": "test"
 }
