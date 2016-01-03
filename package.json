@@ -1,0 +1,21 @@
+{
+  "name": "bugtags-demo-deploy-cli",
+  "version": "0.0.1",
+  "description": "make bugtags demo deploy more easy",
+  "engines": {
+    "node": ">=4"
+  },
+  "files": [
+    "cli.js"
+  ],
+  "dependencies": {
+    "github": "^0.2.4",
+    "node-promise": "^0.5.12",
+    "qiniu": "^6.1.9",
+    "superagent": "^1.6.1",
+    "superagent-promise": "^1.1.0"
+  },
+  "devDependencies": {
+    "node-github": "0.0.3"
+  }
+}
