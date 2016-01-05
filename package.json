@@ -1,6 +1,6 @@
 {
   "name": "bugtags-demo-deploy-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "description": "make bugtags demo deploy more easy",
   "engines": {
@@ -14,7 +14,9 @@
     "btdeploy": "cli.js"
   },
   "files": [
-    "cli.js"
+    "cli.js",
+    "index.js",
+    "lib"
   ],
   "dependencies": {
     "github": "^0.2.4",
