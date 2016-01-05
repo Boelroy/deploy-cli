@@ -32,7 +32,7 @@ function mkdirSync(dirPath, mode) {
 }
 
 function downloadZip(zipball_url, branch) {
-  mkdirSync(path.resolve(__dirname, config.tempPath));
+  mkdirSync(path.resolve(process.cwd(), config.tempPath));
   var localfile = util.format("%s/%s-%s-%s.%s", 
     config.tempPath, 
     bugtagsrc.name,

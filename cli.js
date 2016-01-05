@@ -29,7 +29,7 @@ const cli = meow({
 });
 
 var readOptionsJSON = function () {
-    var optionPath = path.resolve(__dirname, '.bugtagsrc');
+    var optionPath = path.resolve(process.cwd(), '.bugtagsrc');
     var data = {};
     try{
         data = JSON.parse(fs.readFileSync(optionPath, {encoding: 'utf-8'}))
