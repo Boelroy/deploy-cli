@@ -1,13 +1,14 @@
 {
     "name":"Bugtags-demo-deploy-cli",
-    "version": "0.1.0",
-    "user": "you-username",
-    "password": "you-password",
+    "version": "0.0.6",
+    "user": "Boelroy",
+    "password": "your-password",
     "owner": "Boelroy",
-    "repo": "deploy-cli",
-    "releases": ["master"],
-    "qiniu_ak": "",
-    "qiniu_sk":"",
-    "qiniu_buckect": "you-buckect",
-    "description": "test"
+    "repo": "your-repo",
+    "release": false,
+    "branches": "master, dev",
+    "qiniu-ak": "your-ak",
+    "qiniu-sk": "your-sk",
+    "qiniu-buckect": "your-buckect",
+    "desc": "test"
 }

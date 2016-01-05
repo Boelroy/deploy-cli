@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict'
 
 var fs = require("fs");
@@ -9,22 +8,9 @@ var util = require("util");
 var Qiniu = require("./lib/qiniu")
 
 var config = {
-  optionPath: "./.bugtagsrc",
-  tempPath: "./.tmp"
+  tempPath: ".tmp"
 }
-
-function readOptionsJSON() {
-    var data = {};
-    try{
-      console.log(config.optionPath);
-      data = JSON.parse(fs.readFileSync(config.optionPath, {encoding: 'utf-8'}))
-    } catch(e) {
-      console.log(e);
-      console.log("No .bugtagsrc found in directory");
-      return null;
-    }
-    return data;
-}
+var bugtagsrc = null;
 
 function mkdirSync(dirPath, mode) {
   if (!fs.existsSync(dirPath)) {
@@ -45,37 +31,54 @@ function mkdirSync(dirPath, mode) {
   }
 }
 
-function downloadZip(data) {
-  mkdirSync(config.tempPath);
-  var localfile = util.format("%s/%s-%s.%s", config.tempPath, bugtagsrc.name, bugtagsrc.version, "zip")
-  donwloader.download(data.zipball_url, localfile, "zip")
-    .then(uploadToQiniu)
+function downloadZip(zipball_url, branch) {
+  mkdirSync(path.resolve(__dirname, config.tempPath));
+  var localfile = util.format("%s/%s-%s-%s.%s", 
+    config.tempPath, 
+    bugtagsrc.name,
+    branch,
+    bugtagsrc.version, 
+    "zip");
+
+  donwloader.download(zipball_url, localfile, "zip")
+    .then(uploadToQiniu(branch))
 }
 
-function uploadToQiniu(localfile) {
-  Qiniu.uploadToQiniu(bugtagsrc.qiniu_buckect, 
-    localfile, 
-    util.format("%s-%s.%s",bugtagsrc.name, bugtagsrc.version, "zip"))
-  .then(function(ret){
-    console.log(ret);
-  })
+function uploadToQiniu(branch) {
+  return function(localfile){
+    Qiniu.uploadToQiniu(bugtagsrc['qiniu-buckect'],
+      localfile, 
+      util.format("%s-%s-%s.%s",bugtagsrc.name, bugtagsrc.version, branch,"zip"))
+    .then(function(ret){
+      console.log(ret);
+    }, handleCreateError)
+  }
 }
 
 function handleCreateError(err) {
   console.log(err);
 }
 
-var bugtagsrc = readOptionsJSON();
-if(!bugtagsrc) return;
-Github.init(bugtagsrc);
-Qiniu.init(bugtagsrc);
+module.exports = function (options) {
+  bugtagsrc = options;
+  if(!bugtagsrc) return;
+  Github.init(bugtagsrc);
+  Qiniu.init(bugtagsrc);
 
-bugtagsrc.releases.map(function(branch){
-  Github.createRelease({
-    tag_name: "v" + bugtagsrc.version,
-    target_commitish: branch,
-    name: "v" + bugtagsrc.version,
-    body: bugtagsrc.description
-  }).then(downloadZip, handleCreateError)
-});
-  
+  bugtagsrc.branches.split(',')
+    .map(function(branch){
+      branch = branch.trim();
+      if (bugtagsrc['release']){
+        Github.createRelease({
+          tag_name: "v" + bugtagsrc.version,
+          target_commitish: branch,
+          name: "v" + bugtagsrc.version,
+          body: bugtagsrc.desc || " "
+        }).then(function(data){
+          downloadZip(data.zipball_url, branch);
+        }, handleCreateError)
+      } else {
+        downloadZip(Github.getZipBallUrl(), branch);
+      }
+  });
+}
